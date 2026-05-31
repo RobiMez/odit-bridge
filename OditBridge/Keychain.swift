@@ -6,9 +6,9 @@ import Security
 // the identity the server keys off after association. Once linked, losing this
 // UUID means losing access to your data on the server until you re-link.
 enum Keychain {
-    private static let service = "com.ayautomate.OditBridge"
+    static let defaultService = "com.robi.OditBridge"
 
-    static func get(_ key: String) -> String? {
+    static func get(_ key: String, service: String = Keychain.defaultService) -> String? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
@@ -26,7 +26,7 @@ enum Keychain {
     }
 
     @discardableResult
-    static func set(_ key: String, _ value: String) -> Bool {
+    static func set(_ key: String, _ value: String, service: String = Keychain.defaultService) -> Bool {
         guard let data = value.data(using: .utf8) else { return false }
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,

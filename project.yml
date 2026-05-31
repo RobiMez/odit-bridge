@@ -1,6 +1,6 @@
 name: OditBridge
 options:
-  bundleIdPrefix: com.ayautomate
+  bundleIdPrefix: com.robi
   deploymentTarget:
     macOS: "14.0"
   developmentLanguage: en
@@ -48,7 +48,7 @@ targets:
           echo "Installed to $DEST"
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.ayautomate.OditBridge
+        PRODUCT_BUNDLE_IDENTIFIER: com.robi.OditBridge
         PRODUCT_NAME: OditBridge
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: OditBridge/Info.plist
