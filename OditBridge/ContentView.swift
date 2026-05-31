@@ -351,10 +351,12 @@ struct ActionBarView: View {
 
 struct SyncedView: View {
     @EnvironmentObject var state: AppState
+    @EnvironmentObject var reference: ReferenceData
     let onRefresh: () -> Void
 
     @State private var selectedTransactionId: SyncedTransaction.ID?
     @State private var inspecting: SyncedTransaction?
+    @State private var exportError: String?
 
     private var visibleTransactions: [SyncedTransaction] {
         guard let day = state.appliedDayFilter else { return state.syncedTransactions }
@@ -410,6 +412,13 @@ struct SyncedView: View {
                     .background(Color.accentColor.opacity(0.12), in: Capsule())
                 }
                 Spacer()
+                Button(action: exportCSV) {
+                    Label("Export CSV…", systemImage: "square.and.arrow.up")
+                }
+                .controlSize(.small)
+                .disabled(visibleTransactions.isEmpty)
+                .help("Export the currently visible transactions to a .csv file")
+
                 Button(action: onRefresh) {
                     Label("Refresh", systemImage: "arrow.clockwise")
                 }
@@ -446,6 +455,24 @@ struct SyncedView: View {
         }
         .sheet(item: $inspecting, onDismiss: { selectedTransactionId = nil }) { tx in
             TransactionDetailSheet(transaction: tx)
+        }
+    }
+
+    private func exportCSV() {
+        guard !visibleTransactions.isEmpty else { return }
+        guard let url = CSVExport.showSavePanel(
+            suggestedFilename: CSVExport.suggestedFilename()
+        ) else { return }
+        let csv = CSVExport.build(
+            transactions: visibleTransactions,
+            categories: reference.categories
+        )
+        do {
+            try csv.data(using: .utf8)?.write(to: url, options: .atomic)
+            state.log("Exported \(visibleTransactions.count) transaction(s) to \(url.path).")
+        } catch {
+            state.log("CSV export failed: \(error.localizedDescription)", level: .error)
+            exportError = error.localizedDescription
         }
     }
 
