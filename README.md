@@ -9,6 +9,20 @@ heatmap.
 OditBridge is essentially a thin client on top of the odit API — bring
 your own backend (or self-host one) to make it useful.
 
+## Requirements
+
+- macOS 14+
+- iPhone signed in to the same iCloud account, with **Text Message Forwarding** enabled
+  (iPhone → Settings → Messages → Text Message Forwarding → toggle your Mac on).
+  This is what populates `~/Library/Messages/chat.db` on your Mac.
+- **SMS must be stored unencrypted in iCloud.** If you have iCloud's
+  [Advanced Data Protection](https://support.apple.com/en-us/HT212520) enabled,
+  Messages in iCloud is end-to-end encrypted in a way that can leave `chat.db`
+  empty or with unreadable bodies on the Mac side. If OditBridge shows zero
+  staged messages after Load even though your iPhone has plenty, either disable
+  ADP for the account or accept that only newly-forwarded messages (post-setup)
+  will land in `chat.db`.
+
 ## Build
 
 You need Xcode 15+ and [xcodegen](https://github.com/yonaskolb/XcodeGen)
