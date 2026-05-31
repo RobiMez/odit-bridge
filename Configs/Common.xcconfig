@@ -9,9 +9,4 @@ CODE_SIGN_IDENTITY = -
 DEVELOPMENT_TEAM =
 PROVISIONING_PROFILE_SPECIFIER =
 
-// When YES, the post-build script copies the built bundle into
-// /Applications/OditBridge.app after every Debug build. Leave NO for
-// contributors who just want to build and run from Xcode.
-ODIT_LOCAL_INSTALL = NO
-
 #include? "Local.xcconfig"

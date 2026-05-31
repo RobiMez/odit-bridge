@@ -49,17 +49,23 @@ DEVELOPMENT_TEAM = XXXXXXXXXX
 Re-run `xcodegen generate` and you'll get proper signing. The same cert
 across rebuilds means Full Disk Access grants persist between builds.
 
-### Auto-install to `/Applications` after every build
+### Install to `/Applications` for local testing
 
-If you're iterating with Full Disk Access on the `/Applications/OditBridge.app`
-copy, opt into the post-build install step in `Configs/Local.xcconfig`:
+To iterate with Full Disk Access on `/Applications/OditBridge.app`:
 
 ```
-ODIT_LOCAL_INSTALL = YES
+tools/install-local.sh
 ```
 
-With this set, every Debug build replaces `/Applications/OditBridge.app`.
-Off by default so contributors don't get surprise installs.
+Builds Debug, verifies the signature on the build output, then `ditto`s the
+bundle to `/Applications/OditBridge.app` and re-verifies. Re-run after any
+code change.
+
+This used to live as a post-build script in `project.yml` but Xcode's late
+build phases (specifically `RegisterWithLaunchServices`) intermittently
+strip the embedded signature off the installed copy on macOS 14+, leaving
+you with an unlaunchable bundle. Doing the install as a separate step
+sidesteps the issue.
 
 ## Install (pre-built)
 

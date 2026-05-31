@@ -30,26 +30,10 @@ targets:
     configFiles:
       Debug: Configs/Common.xcconfig
       Release: Configs/Common.xcconfig
-    postBuildScripts:
-      - name: Install to /Applications (opt-in via ODIT_LOCAL_INSTALL)
-        basedOnDependencyAnalysis: false
-        script: |
-          set -e
-          if [ "$CONFIGURATION" != "Debug" ]; then
-              exit 0
-          fi
-          if [ "$ODIT_LOCAL_INSTALL" != "YES" ]; then
-              echo "Skipping /Applications install (set ODIT_LOCAL_INSTALL = YES in Configs/Local.xcconfig to enable)"
-              exit 0
-          fi
-          DEST="/Applications/${PRODUCT_NAME}.app"
-          rm -rf "$DEST"
-          # Use ditto rather than cp -R: cp can drop the embedded code
-          # signature on macOS, after which Gatekeeper refuses to launch the
-          # installed bundle. ditto preserves all bundle metadata including
-          # the _CodeSignature directory.
-          ditto "${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app" "$DEST"
-          echo "Installed to $DEST"
+    # No auto-install build phase: Xcode's late build phases (notably
+    # RegisterWithLaunchServices) can strip the embedded signature off
+    # the installed copy if the install runs as part of the build. Use
+    # `tools/install-local.sh` after a build instead — see README.
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.robi.OditBridge
