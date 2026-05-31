@@ -68,7 +68,7 @@ with copy buttons.
 
 ## Bundle ID
 
-`com.ayautomate.OditBridge`. Change in `project.yml` if you want a separate
+`com.robi.OditBridge`. Change in `project.yml` if you want a separate
 identity; remember that Full Disk Access keys grants by bundle ID + code
 signature, so changing the ID is the same as installing a fresh app from
 TCC's perspective.
